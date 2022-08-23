@@ -1,11 +1,14 @@
 package com.example.phonebook
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+
 
 class NumbersAdapter(private val inflater: LayoutInflater) :
     RecyclerView.Adapter<NumbersAdapter.ViewHolder>() {
@@ -34,14 +37,18 @@ class NumbersAdapter(private val inflater: LayoutInflater) :
     }
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val photo: ImageView
         val name: TextView
         val number: TextView
 
+
         init {
-            photo = view.findViewById(R.id.photo)
             name = view.findViewById(R.id.name)
             number = view.findViewById(R.id.number)
+            view.setOnClickListener {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number.text.toString(), null))
+                view.context.startActivity(intent)
+            }
+
         }
     }
 }

@@ -2,30 +2,33 @@ package com.example.phonebook
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.Visibility
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
     private val originalContacts = ArrayList<NumbersModel>()
+    private val search:ImageButton by lazy {findViewById(R.id.search_button)}
+    private val cancel:ImageButton by lazy {findViewById(R.id.cancel_button)}
+    private val editText: EditText by lazy {findViewById(R.id.editText)}
+    private val settingButton: Button by lazy {findViewById(R.id.setting_button) }
+    private val textNoPermission: TextView by lazy{findViewById(R.id.text_no_permission)}
+    private val recycler: RecyclerView by lazy {findViewById(R.id.recyclerView)}
 
     private val adapter by lazy { NumbersAdapter(this@MainActivity.layoutInflater) }
 
@@ -46,12 +49,11 @@ class MainActivity : AppCompatActivity() {
         if (READ_CONTACTS_GRANTED) {
             loadContacts()
         }
-        val editText: EditText = findViewById(R.id.editText)
+
         editText.addTextChangedListener {
             findByName(it.toString())
         }
-        val search:ImageButton = findViewById(R.id.search_button)
-        val cancel:ImageButton = findViewById(R.id.cancel_button)
+
 
         search.setOnClickListener {
             search.visibility =View.INVISIBLE
@@ -66,8 +68,6 @@ class MainActivity : AppCompatActivity() {
             originalContacts.clear()
             loadContacts()
         }
-
-
     }
 
     private fun findByName(word: String) {
@@ -91,7 +91,18 @@ class MainActivity : AppCompatActivity() {
         if (READ_CONTACTS_GRANTED) {
             loadContacts()
         } else {
-            Toast.makeText(this, "Требуется установить разрешения", Toast.LENGTH_LONG).show()
+            search.visibility = View.INVISIBLE
+            cancel.visibility = View.INVISIBLE
+            editText.visibility = View.INVISIBLE
+            recycler.visibility = View.INVISIBLE
+            textNoPermission.visibility = View.VISIBLE
+            settingButton.visibility = View.VISIBLE
+            settingButton.setOnClickListener {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
         }
     }
 
@@ -123,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setChanges(originalContacts)
 
-        val recycler: RecyclerView = findViewById(R.id.recyclerView)
+
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
