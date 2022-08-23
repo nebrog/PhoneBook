@@ -11,11 +11,40 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Поиск"
+        android:singleLine="true"
+        android:visibility="invisible"
         android:imeOptions="actionSearch"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/search_button"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageButton
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ic_search"
+        android:background="@android:color/transparent"
+        android:visibility="visible"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <ImageButton
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_cancel"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -25,6 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/editText"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
